@@ -1,3 +1,4 @@
+---
 # Default values for flux.
 
 # Weave Cloud service token
@@ -30,7 +31,8 @@ serviceAccount:
   # Specifies whether a service account should be created
   create: true
   # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
+  # If not set and create is true, a name is generated using the fullname
+  # template
   name:
   # Annotations for the Service Account
   annotations: {}
@@ -82,24 +84,28 @@ gpgKeys:
   configMapName: ""
 
 sync:
-  # use `.sync.state: secret` to store flux's state as an annotation on the secret (instead of a git tag)
+  # use `.sync.state: secret` to store flux's state as an annotation on the
+  # secret (instead of a git tag)
   state: git
   # Duration after which sync operations time out (defaults to 1m)
   timeout:
-  # Controls how often Flux will apply what’s in git, to the cluster, absent new commits.
-  # Reducing this interval below a minute or so may hinder Flux, since syncs can take tens of seconds,
-  # leaving not much time to do other operations.
+  # Controls how often Flux will apply what’s in git, to the cluster,
+  # absent new commits.
+  # Reducing this interval below a minute or so may hinder Flux, since syncs can
+  # take tens of seconds, leaving not much time to do other operations.
   #  interval: "5m"
 
 git:
-  # URL of git repo with Kubernetes manifests; e.g. git.url=ssh://git@github.com/fluxcd/flux-get-started
+  # URL of git repo with Kubernetes manifests;
+  # e.g. git.url=ssh://git@github.com/fluxcd/flux-get-started
   url: ""
   # Branch of git repo to use for Kubernetes manifests
   branch: "master"
   # Path within git repo to locate Kubernetes manifests (relative path)
   path: ""
   # Set to `true` if you intend for Flux to not be able to push changes to git.
-  # Also configure state.mode to `secret` since storing state in a git tag will no longer be possible.
+  # Also configure state.mode to `secret` since storing state in a git tag will
+  # no longer be possible.
   readonly: false
   # Username to use as git committer
   user: "Weave Flux"
@@ -109,7 +115,8 @@ git:
   signingKey: ""
   # If set, the signatures of the sync tag and commits will be verified.
   verifySignatures: false
-  # If set, the author of git commits will reflect the user who initiated the commit and will differ from the git committer.
+  # If set, the author of git commits will reflect the user who initiated the
+  # commit and will differ from the git committer.
   setAuthor: false
   # Label to keep track of sync progress
   label:
@@ -122,7 +129,8 @@ git:
   # The secret name can be used to supply your own SSH key, instead of
   # relying on Flux to generate one for you:
   # 1. Generate a SSH key named identity: ssh-keygen -q -N "" -f ./identity
-  # 2. Create a Kubernetes secret: kubectl -n flux create secret generic flux-ssh --from-file=./identity
+  # 2. Create a Kubernetes secret:
+  #    kubectl -n flux create secret generic flux-ssh --from-file=./identity
   # 3. Delete the private key: rm ./identity
   # 4. Add ./identity.pub as a deployment key with write access in your Git repo
   # 5. Set the secret name (flux-ssh) below
@@ -133,7 +141,8 @@ git:
   # `gpgKeys.secretName`.
   secret:
     enabled: false
-  # Global Git configuration See https://git-scm.com/docs/git-config for more details.
+  # Global Git configuration
+  # See https://git-scm.com/docs/git-config for more details.
   config:
     enabled: false
     secretName: ""
@@ -155,7 +164,9 @@ registry:
   burst: 125
   # Output trace of image registry requests to log
   trace: false
-  # Use HTTP rather than HTTPS for these image registry domains eg --set registry.insecureHosts="registry1.cluster.local\,registry2.cluster.local"
+  # Use HTTP rather than HTTPS for these image registry domains, e.g:
+  # --set
+  # registry.insecureHosts="registry1.cluster.local\,registry2.cluster.local"
   insecureHosts:
   # Duration to keep cached image info. Must be < 1 month. (Deprecated)
   cacheExpiry:
@@ -165,7 +176,8 @@ registry:
   excludeImage:
   # Only scan images that match these glob expressions
   includeImage:
-  # Allow usage of (RFC3339) timestamp labels from (canonical) image refs that match these glob expressions
+  # Allow usage of (RFC3339) timestamp labels from (canonical) image refs that
+  # match these glob expressions.
   useTimestampLabels:
   # AWS ECR settings
   ecr:
@@ -202,14 +214,14 @@ memcached:
   tolerations: []
   affinity: {}
   resources: {}
-    # If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #  cpu: 100m
-    #  memory: 628Mi
-    # requests:
-    #  cpu: 50m
-    #  memory: 512Mi
+  # If you do want to specify resources, uncomment the following lines, adjust
+  # them as necessary, and remove the curly braces after 'resources:'.
+  #  limits:
+  #    cpu: 100m
+  #    memory: 628Mi
+  #  requests:
+  #    cpu: 50m
+  #    memory: 512Mi
 
 ssh:
   # Overrides for git over SSH. If you use your own git server, you
@@ -237,7 +249,8 @@ kube:
 
 # The contents of the secret will be defined as environment variables
 # in the Flux container. Once defined, you can use the variables in your
-# `git.url`: `https://$(GIT_AUTHUSER):$(GIT_AUTHKEY)@github.com/fluxcd/flux-get-started.git`
+# `git.url`:
+# `https://$(GIT_AUTHUSER):$(GIT_AUTHKEY)@github.com/fluxcd/flux-get-started.git`
 env:
   secretName: ""
 
@@ -266,18 +279,28 @@ manifestGeneration: false
 
 # Add your own init container or uncomment and modify the given example.
 initContainers: {}
-#   flux-init:  # <- will be used as container name
-#     image: "busybox:1.30.1"
-#     imagePullPolicy: "IfNotPresent"
-#     command: ['sh', '-c', 'counter=0; until [ "$counter" -ge 30 ]; do if [ -f /tmp/flux-deploy-key/identity ]; then exit 0; else echo waiting for flux deploy key && sleep 1 && counter=$((counter+1)); fi; done; exit 1;']
-#     volumeMounts:
-#       - mountPath: /tmp/flux-deploy-key
-#         name: flux-deploy-key
+#  flux-init:  # <- will be used as container name
+#    image: "busybox:1.30.1"
+#    imagePullPolicy: "IfNotPresent"
+#    command:
+#      - 'sh'
+#      - '-c'
+#      - 'counter=0; until [ "$counter" -ge 30 ]; do
+#          if [ -f /tmp/flux-deploy-key/identity ]; then exit 0;
+#          else echo waiting for flux deploy key && sleep 1
+#            && counter=$((counter+1));
+#          fi;
+#        done; exit 1;'
+#    volumeMounts:
+#      - mountPath: /tmp/flux-deploy-key
+#        name: flux-deploy-key
 
 # Additional containers to be added to the flux pod.
 extraContainers: []
 
-# Host aliases to be added to the Flux pod - see < - ip: <https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/>
+# Host aliases to be added to the Flux pod - see
+# https://kubernetes.io/docs/concepts/services-networking/\
+# add-entries-to-pod-etc-hosts-with-host-aliases
 hostAliases: {}
 # - ip: "127.0.0.1"
 #    hostnames:
